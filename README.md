@@ -7,7 +7,7 @@ This tutorial outlines the implementation of a Group Policy Object (GPO) within 
 - Microsoft Azure
 - Group Policy Management
 - Active Directory
-- Remote Deskto[
+- Remote Desktop
 
 <h2>Operating Systems Used </h2>
 
