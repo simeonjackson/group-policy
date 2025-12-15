@@ -1,4 +1,4 @@
-<h1>Group Policy Objects</h1>
+<h1>Group Policy Objects + Lockout Policy</h1>
 This tutorial outlines the implementation of a Group Policy Object (GPO) within our domain where I create an account lockout policy.  <br />
 
 
