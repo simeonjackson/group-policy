@@ -153,30 +153,94 @@ When logging into my client VM as any user I now have my corporate wallpaper set
 <h3>- Adding Logon Legal Notice</h3>
 
 <p>
+This first computer configuration policy is generating a legal warning banner upon boot before a user starts a session. Users will have to consent to having read the message before being able to logon.
+
+A small troubleshooting error that I ran into here was not removing the Client VM from its default Computers container and putting it in an OU. This has to be done because policies only apply to objects inside of OUs.
+<img width="1230" height="823" alt="Image" src="https://github.com/user-attachments/assets/ff02c498-2bae-42a4-aa99-3f6147b35210" />
+
+I found "Interactive logon:..." under `Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options` and set a policy title and text.
+<img width="1651" height="916" alt="Image" src="https://github.com/user-attachments/assets/eab3aa6b-05b8-4047-b8a9-5c9a5bf584cd" />
+
+<img width="1279" height="847" alt="Image" src="https://github.com/user-attachments/assets/9ebe5911-faea-473a-9176-3c6b0d6d9e04" />
+
+<img width="1276" height="853" alt="Image" src="https://github.com/user-attachments/assets/1aade289-93df-459f-bce9-9d35855e366b" />
+
+Here is the final result displayed upon boot before the login screen.
+<img width="1918" height="1077" alt="Image" src="https://github.com/user-attachments/assets/17248e77-e96b-4656-9038-65a0e9ae1a79" />
+<img width="1908" height="1075" alt="image" src="https://github.com/user-attachments/assets/f065e7cc-95cc-45c6-b42c-6d7a13d36300" />
+
 
 </p>
 
 <h3>- Audit Logon Events</h3>
 
 <p>
+I next created a policy that will ensure that all authentication attempts on domain machines are actively logged to monitor for unauthorized access attempts. These logs will be available to view in the Event Viewer and can help us to investigate suspicious logon activity.
 
+I navigated to `Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration` and enabled Success/Failure logging for Logon events.
+
+<img width="1747" height="952" alt="Image" src="https://github.com/user-attachments/assets/aeb16458-8ce7-4ef1-8442-fb6cbbc2b8f1" />
+
+<img width="1546" height="853" alt="Image" src="https://github.com/user-attachments/assets/abf7dea3-b868-4238-8cbd-c21d3a8f034d" />
+
+Intentionally failed a login attempt on the client workstation. Opened the Windows Event Viewer (Security Log) as an administrator and successfully located Event ID 4625 (Audit Failure), confirming the environment was successfully tracking security events.
+
+<img width="1912" height="1018" alt="Image" src="https://github.com/user-attachments/assets/01382a81-e9b0-4803-ac55-2befc44e085a" />
+
+<img width="1569" height="988" alt="Image" src="https://github.com/user-attachments/assets/9c444e96-a453-4320-a38f-2573696d9d44" />
 </p>
 
 <h3>- Renaming Built-In Admin Account</h3>
 
 <p>
+Every single Windows computer ever manufactured comes with a built-in local account named exactly `Administrator`. This account is the "break glass" emergency account, and it has absolute, unrestricted power over that physical hardware. Because this is a universal standard, every automated ransomware script, brute-force hacking tool, and malicious bot on the internet is programmed to knock on the front door and ask for the user "Administrator." In the security world, an attacker needs two things to break in: a username and a password. By leaving the default name, you are giving them 50% of the puzzle for free.
 
+The fix for this is simple, I configured "Accounts: Rename administrator account" under `Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options`, changing the default name to an obscure standard (`LocalAdmin-IT` in this case).
+
+<img width="1777" height="925" alt="Image" src="https://github.com/user-attachments/assets/27290bcd-612b-4d16-836c-f741b7b495d9" />
+
+<img width="1381" height="778" alt="Image" src="https://github.com/user-attachments/assets/7690fe06-298c-47b1-b617-d53b90213692" />
+
+I then opened Computer Management (`compmgmt.msc`) on the client VM, navigated to Local Users and Groups, and verified the default Administrator account was successfully renamed.
+
+<img width="1480" height="996" alt="Image" src="https://github.com/user-attachments/assets/dd5205e6-3958-4cdd-b447-7eac5ad9b8a5" />
 </p>
 
 <h3>- Enabling Windows Defender Firewall</h3>
 
 <p>
+Here I am going to enforce Windows Defender Firewall into an "Always On" state. This will prevent users and potential attackers from disabling the local firewall ensuring endpoint protection remains active.
+
+I set "Windows Defender Firewall: Protect all network connections" to Enabled under `Computer Configuration > Administrative Templates > Network > Network Connections > Windows Defender Firewall > Domain Profile`.
+<img width="1771" height="919" alt="Image" src="https://github.com/user-attachments/assets/f1f7ae5a-428f-49ba-867a-53ca0747aed7" />
+
+<img width="1023" height="954" alt="Image" src="https://github.com/user-attachments/assets/cb8e5930-a4ae-477b-b86c-e1d526dd54ef" />
+
+To verify I logged in as a user to the client VM and verified that the firewall status was active and the option to turn it off was greyed out. It also stats that these settings are managed by the administrator.
+
+<img width="1168" height="696" alt="Image" src="https://github.com/user-attachments/assets/779f36db-fe14-44e6-855c-68335b7f3e5a" />
 
 </p>
 
 <h3>- Automatic Updates (Notify to Install)</h3>
 
 <p>
+This policy will prevent servers or workstations from rebooting in the middle of a day due to automatic Windows updates. The Updates will download but not install allowing the the installation to be planned by an IT team during a period of downtime.
 
+Configured "Configure Automatic Updates" to "Option 3 - Auto download and notify for install" under `Computer Configuration > Administrative Templates > Windows Components > Windows Update`.
+
+<img width="1690" height="924" alt="Image" src="https://github.com/user-attachments/assets/6bf264a8-be02-45ac-90d0-1c1f73ab74f4" />
+
+<img width="1137" height="955" alt="Image" src="https://github.com/user-attachments/assets/e920fc41-6f26-4e3a-9a8c-0030ba7131a2" />
+
+<img width="1632" height="948" alt="Image" src="https://github.com/user-attachments/assets/544d76af-339a-4a7b-a8ae-cd2a707f0019" />
+
+Pbviously it is important to install these patches onto our devices. This policy is telling our computers to download the patch but wait for explicit approval or a maintenance window before installing.
+
+<h2>Takeaways</h2>
+
+<p>
+Running through some practical uses for Group Policy gave me some insight on how automation can be used to ensure consistency in an environment helpinf reduce human errors, time and help desk tickets. It also allows a proactive stance to be taken on certain security issues.
+
+All in all, it is nice to see how these policies tie into Active Directory forming the basis of identity management, least privilege, and access control.
 </p>
-
