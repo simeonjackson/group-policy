@@ -21,7 +21,7 @@ Applying Group Policy Objects (GPOs) allows for another level of control when ad
 In this lab I came up with 10 different GPOs to target both user behaviors and machine-level settings.
 
 
-<h2>The Setup</h2>
+<h2>User vs. Computer Configuration</h2>
 
 This deployment is split into two categories:
 
