@@ -240,7 +240,7 @@ Pbviously it is important to install these patches onto our devices. This policy
 <h2>Takeaways</h2>
 
 <p>
-Running through some practical uses for Group Policy gave me some insight on how automation can be used to ensure consistency in an environment helpinf reduce human errors, time and help desk tickets. It also allows a proactive stance to be taken on certain security issues.
+Running through some practical uses for Group Policy gave me some insight on how automation can be used to ensure consistency in an environment helping reduce human errors, time and help desk tickets. It also allows a proactive stance to be taken on certain security issues.
 
 All in all, it is nice to see how these policies tie into Active Directory forming the basis of identity management, least privilege, and access control.
 </p>
